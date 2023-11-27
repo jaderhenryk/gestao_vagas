@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: gestao_vagas_pg
+    image: postgres:12.15
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gestao_vagas
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

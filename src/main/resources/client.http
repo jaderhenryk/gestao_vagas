@@ -1,0 +1,62 @@
+@baseUrl = http://localhost:8080
+@authToken = {{authenticate.response.body.access_token}}
+
+# @name create_candidate
+POST {{baseUrl}}/candidate
+Content-Type: application/json
+
+{
+    "name": "Jader Henrique 1",
+    "username": "jaderhenryk1",
+    "email": "jader1@mail.com",
+    "password": "1234567890",
+    "description": "Software developer"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+    "email": "jader2@mail.com",
+    "password": "123456"
+}
+
+###
+
+# @name create_company
+POST {{baseUrl}}/company
+Content-Type: application/json
+# Authorization: Bearer {{authToken}}
+
+{
+    "username": "company_1",
+    "password": "1234567890",
+    "email": "company1@java.com",
+    "name": "Company 1",
+    "website": "https://company1.com.br",
+    "description": "Test Company One"
+}
+
+###
+
+# @name create_job
+POST {{baseUrl}}/company/job
+Content-Type: application/json
+# Authorization: Bearer {{authToken}}
+
+{
+    "description": "Job description 1",
+    "benefits": "none",
+    "level": "slave",
+    "companyId": "4dca85e6-a727-4bce-a431-0969b20ec296"
+}
+
+###
+
+# @name fecth_questions
+GET {{baseUrl}}/questions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
