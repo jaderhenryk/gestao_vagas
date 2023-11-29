@@ -1,5 +1,7 @@
 package com.jaderhenryk.gestao_vagas.modules.companies.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jaderhenryk.gestao_vagas.modules.companies.CompanyEntity;
 import com.jaderhenryk.gestao_vagas.modules.companies.JobEntity;
+import com.jaderhenryk.gestao_vagas.modules.companies.dto.CreateJobDto;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateCompanyUseCase;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateJobUseCase;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -35,7 +39,18 @@ public class CompanyController {
     }
 
     @PostMapping(value = "/job")
-    public JobEntity create(@Valid @RequestBody JobEntity jobEntity) {
+    public JobEntity create(
+        @Valid @RequestBody CreateJobDto createJobDto,
+        HttpServletRequest request
+    ) {
+        var companyId = request.getAttribute("company_id");
+        JobEntity jobEntity = JobEntity.builder()
+            .companyId(UUID.fromString(companyId.toString()))
+            .benefits(createJobDto.getBenefits())
+            .description(createJobDto.getDescription())
+            .level(createJobDto.getLevel())
+            .build();
+
         return this.createJobUseCase.execute(jobEntity);
     }
 }

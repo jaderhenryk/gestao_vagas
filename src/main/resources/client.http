@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8080
-@authToken = {{authenticate_company.response.body.access_token}}
+@authToken = {{authenticate_company.response.body}}
 
 # @name create_candidate
 POST {{baseUrl}}/candidate
@@ -45,13 +45,12 @@ Content-Type: application/json
 # @name create_job
 POST {{baseUrl}}/company/job
 Content-Type: application/json
-# Authorization: Bearer {{authToken}}
+Authorization: Bearer {{authToken}}
 
 {
     "description": "Job description 1",
     "benefits": "none",
-    "level": "slave",
-    "companyId": "4dca85e6-a727-4bce-a431-0969b20ec296"
+    "level": "slave"
 }
 
 ###
