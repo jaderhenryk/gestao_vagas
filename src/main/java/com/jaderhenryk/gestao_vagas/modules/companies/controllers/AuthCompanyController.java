@@ -25,7 +25,7 @@ public class AuthCompanyController {
     @PostMapping("/company")
     public ResponseEntity<Object> authCompany(@RequestBody AuthCompanyDTO authCompanyDTO) {
         try {
-            String result = this.authCompanyUseCase.execute(authCompanyDTO);
+            var result = this.authCompanyUseCase.execute(authCompanyDTO);
             return ResponseEntity.ok().body(result);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
