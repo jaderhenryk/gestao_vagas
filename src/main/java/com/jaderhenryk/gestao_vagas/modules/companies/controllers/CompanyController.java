@@ -16,8 +16,16 @@ import com.jaderhenryk.gestao_vagas.modules.companies.dto.CreateJobDto;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateCompanyUseCase;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateJobUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/company")
@@ -41,6 +49,16 @@ public class CompanyController {
 
     @PostMapping(value = "/job")
     @PreAuthorize("hasRole('COMPANY')")
+    @Tag(name = "Job", description = "Jobs informations")
+    @Operation(summary = "Creating a job", description = "This functions creates a new company job.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+            @Content(
+                schema = @Schema(implementation = JobEntity.class)
+            )
+        })
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public JobEntity create(
         @Valid @RequestBody CreateJobDto createJobDto,
         HttpServletRequest request
