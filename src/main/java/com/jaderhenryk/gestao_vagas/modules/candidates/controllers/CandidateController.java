@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidate", description = "Candidate information")
 public class CandidateController {
 
     @Autowired
@@ -46,6 +47,13 @@ public class CandidateController {
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
     
     @PostMapping
+    @Operation(summary = "Create a candidate", description = "Creates a new candidate")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = CandidateEntity.class))
+        }),
+        @ApiResponse(responseCode = "400", description = "User already exists.")
+    })
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidate) {
         try {
             var result = this.createCandidateUseCase.execute(candidate);
@@ -57,6 +65,14 @@ public class CandidateController {
 
     @GetMapping
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Candidate profile", description = "Returns the candidate profile information")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+        }),
+        @ApiResponse(responseCode = "400", description = "User not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> getProfile(HttpServletRequest request) {
         var candidateId = request.getAttribute("candidate_id");
         try {
