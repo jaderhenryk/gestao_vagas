@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.jaderhenryk.gestao_vagas.exceptions.UserAlreadyExistsException;
 import com.jaderhenryk.gestao_vagas.modules.candidates.CandidateEntity;
-import com.jaderhenryk.gestao_vagas.modules.candidates.CandidateRepository;
+import com.jaderhenryk.gestao_vagas.modules.candidates.repositories.CandidateRepository;
 
 @Service
 public class CreateCandidateUseCase {
