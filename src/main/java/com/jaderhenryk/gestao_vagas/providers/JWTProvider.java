@@ -20,7 +20,6 @@ public class JWTProvider {
             var tokenDecoded = JWT.require(algorithm).build().verify(token);
             return tokenDecoded;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
