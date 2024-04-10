@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import com.jaderhenryk.gestao_vagas.modules.companies.JobEntity;
 import com.jaderhenryk.gestao_vagas.modules.companies.dto.CreateJobDto;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateCompanyUseCase;
 import com.jaderhenryk.gestao_vagas.modules.companies.useCases.CreateJobUseCase;
+import com.jaderhenryk.gestao_vagas.modules.companies.useCases.ListAllJobsByCompanyUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +38,9 @@ public class CompanyController {
 
     @Autowired
     private CreateJobUseCase createJobUseCase;
+
+    @Autowired
+    private ListAllJobsByCompanyUseCase listAllJobsByCompanyUseCase;
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid @RequestBody CompanyEntity companyEntity) {
@@ -76,5 +81,21 @@ public class CompanyController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/jobs")
+    @PreAuthorize("hasRole('COMPANY')")
+    @Tag(name = "Job", description = "Jobs list")
+    @Operation(summary = "Jobs list", description = "This function returns the list of jobs from a company")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = JobEntity.class))
+            })
+    })
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> listByCompany(HttpServletRequest request){
+        var companyId = request.getAttribute("company_id");
+        var result = this.listAllJobsByCompanyUseCase.execute(UUID.fromString(companyId.toString()));
+        return ResponseEntity.ok().body(result);
     }
 }
